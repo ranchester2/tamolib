@@ -1,0 +1,1 @@
+from .tamo import Tamo

@@ -1,0 +1,2 @@
+include tamo/tamo-data/*
+include tamo/tamo-shell/*
