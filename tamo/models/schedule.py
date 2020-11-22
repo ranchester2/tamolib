@@ -35,12 +35,12 @@ class Lesson:
     """
 
     def __init__(
-        self,
-        dnumber: int,
-        lesson_start: datetime.datetime,
-        lesson_end: datetime.datetime,
-        name: str,
-        teacher: Teacher
+            self,
+            dnumber: int,
+            lesson_start: datetime.datetime,
+            lesson_end: datetime.datetime,
+            name: str,
+            teacher: Teacher
     ):
         """
         Create a lesson object
@@ -67,16 +67,17 @@ class SchoolDay:
 
     Attributes:
         :lessons: list of TAMO `Lesson` objects.
-        :empty: wether the SchoolDay has no lessons.
+        :empty: whether the SchoolDay has no lessons.
 
     """
+
     def __init__(self, lessons=[], empty=False):
         """
         Create a school day
 
         :lessons: can be a list of Lesson objects, if not given
         you must add lessons after thefact with `SchoolDay.append_lesson`.
-        :empty: wether the schoolday has no lessons.
+        :empty: whether the schoolday has no lessons.
         """
         self.lessons = lessons
         self.empty = empty
@@ -151,16 +152,15 @@ class Schedule:
                     tmp_day.empty = True
                     continue
 
-
                 # Second element is the number of the unparsed_lesson in the day
                 tmp_lesson_number = self._number_map[unparsed_lesson_children[1].text]
 
                 # Third element is the length of the unparsed_lesson formated like this:
                 # %h%m - %h%m
                 tmp_unparsed_lesson_start = (
-                    unparsed_lesson_children[2].text)[:5]
+                                                unparsed_lesson_children[2].text)[:5]
                 tmp_unparsed_lesson_end = (
-                    unparsed_lesson_children[2].text)[-5:]
+                                              unparsed_lesson_children[2].text)[-5:]
 
                 tmp_lesson_start = datetime.datetime.strptime(
                     tmp_unparsed_lesson_start, "%H:%M")
@@ -170,10 +170,8 @@ class Schedule:
                 # Fourth element is the full name of theunparsed_lesson
                 tmp_lesson_name = unparsed_lesson_children[3].text
 
-                # Fith element is the full name of the Teacher
+                # Fifth element is the full name of the Teacher
                 tmp_lesson_teacher_name = unparsed_lesson_children[4].text
-
-              
 
                 # We first create the lesson object beforehand because otherwise it
                 # doesn't work

@@ -31,6 +31,7 @@ class User:
         """
         self.name = name
 
+
 class Teacher(User):
     """
     A Teacher in TAMO, currently mostly useless

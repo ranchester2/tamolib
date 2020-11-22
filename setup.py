@@ -26,5 +26,4 @@ setuptools.setup(
         "License :: OSI Approved :: GPL License",
         "Operating System :: OS independent",
     ]
-    # python_requires='>=3.6', I don't know
 )

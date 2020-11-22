@@ -102,7 +102,7 @@ class Tamo():
             "https://dienynas.tamo.lt/TvarkarascioIrasas/MokinioTvarkarastis")
         only_schedule = SoupStrainer(id="c_main")
 
-        soup = BeautifulSoup(r.text, "lxml",  parse_only=only_schedule)
+        soup = BeautifulSoup(r.text, "lxml", parse_only=only_schedule)
 
         # c_main is the id that the schedule div uses
         schedule_div = soup.find("div", {"id": "c_main"})
