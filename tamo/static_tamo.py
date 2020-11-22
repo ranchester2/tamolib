@@ -1,4 +1,4 @@
-# This file is part of libtamo
+# This file is part of tamolib
 # Copyright (C) 2020
 #
 # This program is free software: you can redistribute it and/or modify

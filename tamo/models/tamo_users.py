@@ -14,23 +14,36 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import tamo
-import unittest
-from dotenv import load_dotenv
-from pathlib import Path
-import os
+class User:
+    """
+    A base TAMO user, currently mostly useless
 
-class LoginTest(unittest.TestCase):
-    def setUp(self):
-        load_dotenv(dotenv_path=Path("tests") / "secrets" / ".env")
-        self.real_t = tamo.Tamo(os.environ["TAMO_USERNAME"], os.environ["TAMO_PASSWORD"])
+    Attributes:
+        :name: full `str` name of the user
+    """
 
-        self.fake_t = tamo.Tamo("user", "password")
+    def __init__(self, name: str):
+        """
+        Create a TAMO user
 
-    def test_login(self):
-        self.assertTrue(self.real_t.logged_in)
-        self.assertFalse(self.fake_t.logged_in)
+        Arguments:
+            :name: full `str` name of the user
+        """
+        self.name = name
 
-    def tearDown(self):
-        self.real_t.close()
-        self.fake_t.close()
+class Teacher(User):
+    """
+    A Teacher in TAMO, currently mostly useless
+
+    Attributes:
+        :name: full `str` name of the teacher
+    """
+
+    def __init__(self, name):
+        """
+        Create a TAMO teacher
+
+        Arguments:
+            :name: full `str` name of the teacher
+        """
+        super().__init__(name)

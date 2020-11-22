@@ -1,4 +1,4 @@
-# This file is part of libtamo
+# This file is part of tamolib
 # Copyright (C) 2020
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,7 @@ from pathlib import Path
 import json
 import requests
 from bs4 import BeautifulSoup, SoupStrainer
+from tamo.models import Schedule
 
 
 class Tamo():
@@ -27,13 +28,16 @@ class Tamo():
     Class designed for creating a Tamo session
     and using it to communicate with the online
     education platform
+
+    Attributes:
+        :logged_in: `bool` of wether you have successfully authenticated and are logged in.
     """
+
     def __init__(self, username, password):
         """
         Create a Tamo session
 
         :username: the username of your account.
-
         :password: the password of your account.
         """
         self._session = requests.Session()
@@ -75,8 +79,34 @@ class Tamo():
         r = self._session.get("http://dienynas.tamo.lt/?clickMode=True")
 
         # We are redirected if we failed to login
-        return 302 not in [response.status_code for response in r.history]
+        self._logged_in = (302 not in [response.status_code for response in r.history])
+        return self._logged_in
 
     def close(self):
-        """Closes the connection with Tamo"""
+        """Close the connection with Tamo"""
         self._session.close()
+
+    @property
+    def schedule(self) -> Schedule:
+        """
+        Your account's lesson schedule
+
+        A TAMO `Schedule` object.
+        """
+        if self._schedule is None:
+            return self._get_schedule()
+        return self._schedule
+
+    def _get_schedule(self):
+        r = self._session.post(
+            "https://dienynas.tamo.lt/TvarkarascioIrasas/MokinioTvarkarastis")
+        only_schedule = SoupStrainer(id="c_main")
+
+        soup = BeautifulSoup(r.text, "lxml",  parse_only=only_schedule)
+
+        # c_main is the id that the schedule div uses
+        schedule_div = soup.find("div", {"id": "c_main"})
+        schedule = Schedule(schedule_div)
+
+        self._schedule = schedule
+        return self._schedule
