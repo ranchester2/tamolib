@@ -54,7 +54,7 @@ class Lesson:
             :name: `str` of full name of the lesson's subject.
             :teacher: TAMO `Teacher` object of who Teaches the subject.
         """
-        self.num_in_day = dnumber,
+        self.num_in_day = dnumber
         self.start = lesson_start
         self.end = lesson_end
         self.name = name
@@ -79,7 +79,12 @@ class SchoolDay:
         you must add lessons after thefact with `SchoolDay.append_lesson`.
         :empty: whether the schoolday has no lessons.
         """
-        self.lessons = lessons
+
+        # We need to do this instead of simply assigning, because otherwise
+        # every time we create such an object, it gets its previous values.
+        # I don't know why is this
+        self.lessons = lessons[:]
+
         self.empty = empty
 
         # If the passed list is empty an error here is expected
@@ -138,29 +143,30 @@ class Schedule:
     def _parse(self):
         self._days = []
 
-        # Only days that have lessons have class white
-        unparsed_days = self._sched_div.find_all("tbody", class_="white")
+        all_unparsed_days = self._sched_div.find_all("table", class_="c_main_table full_width padless borderless wrap_text")
 
-        for unparsed_day in unparsed_days:
+        for unparsed_day in all_unparsed_days:
             tmp_day = SchoolDay()
 
-            for unparsed_lesson in unparsed_day.find_all(recursive=False):
+            unparsed_lessons_of_day = unparsed_day.find("tbody").find_all(recursive=False)
+
+            for unparsed_lesson in unparsed_lessons_of_day:
                 unparsed_lesson_children = unparsed_lesson.find_all(recursive=False)
 
                 # We need to check wether there aren't any lessons
-                if "Nėra pamokų" in unparsed_lesson_children[0].text:
+                if "Nėra pamokų" in unparsed_lesson_children[0].get_text(strip=True):
                     tmp_day.empty = True
                     continue
 
                 # Second element is the number of the unparsed_lesson in the day
-                tmp_lesson_number = self._number_map[unparsed_lesson_children[1].text]
+                tmp_lesson_number = self._number_map[unparsed_lesson_children[1].get_text(strip=True)]
 
                 # Third element is the length of the unparsed_lesson formated like this:
                 # %h%m - %h%m
                 tmp_unparsed_lesson_start = (
-                                                unparsed_lesson_children[2].text)[:5]
+                                                unparsed_lesson_children[2].get_text(strip=True))[:5]
                 tmp_unparsed_lesson_end = (
-                                              unparsed_lesson_children[2].text)[-5:]
+                                              unparsed_lesson_children[2].get_text(strip=True))[-5:]
 
                 tmp_lesson_start = datetime.datetime.strptime(
                     tmp_unparsed_lesson_start, "%H:%M")
@@ -168,10 +174,10 @@ class Schedule:
                     tmp_unparsed_lesson_end, "%H:%M")
 
                 # Fourth element is the full name of theunparsed_lesson
-                tmp_lesson_name = unparsed_lesson_children[3].text
+                tmp_lesson_name = unparsed_lesson_children[3].get_text(strip=True)
 
                 # Fifth element is the full name of the Teacher
-                tmp_lesson_teacher_name = unparsed_lesson_children[4].text
+                tmp_lesson_teacher_name = unparsed_lesson_children[4].get_text(strip=True)
 
                 # We first create the lesson object beforehand because otherwise it
                 # doesn't work
@@ -186,6 +192,7 @@ class Schedule:
                 )
 
             self._days.append(tmp_day)
+            del(tmp_day)
 
     @property
     def days(self) -> list:
