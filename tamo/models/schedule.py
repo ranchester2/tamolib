@@ -192,7 +192,6 @@ class Schedule:
                 )
 
             self._days.append(tmp_day)
-            del(tmp_day)
 
     @property
     def days(self) -> list:
