@@ -47,10 +47,14 @@ class ScheduleTest(unittest.TestCase):
         with open(Path("tests") / "secrets" / "schedule.json") as f:
             self.real_schedule = json.load(f)
 
-    def test_schedule(self):
         self.t = tamo.Tamo(
             os.environ["TAMO_USERNAME"], os.environ["TAMO_PASSWORD"])
 
+    def tearDown(self):
+        # To not get warnings in tests about unclosed sockets
+        self.t.close()
+
+    def test_schedule(self):
         for didx, day in enumerate(self.t.schedule):
             # We only test the first 3 days and the last because I can't be bothered to write
             # the schedule.json for the rest of them.
@@ -81,16 +85,14 @@ class ScheduleTest(unittest.TestCase):
                     datetime.datetime.strptime(
                         self.real_schedule[didx]["lessons"][lidx]["end"],
                         "%H:%M"
-                    ),
+                    )
                 )
                 self.assertEqual(
                     lesson.name,
                     self.real_schedule[didx]["lessons"][lidx]["name"]
                 )
 
-                
                 self.assertEqual(
                     lesson.teacher.name,
                     self.real_schedule[didx]["lessons"][lidx]["teacher"]["name"]
                 )
-            
