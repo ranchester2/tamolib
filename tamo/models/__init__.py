@@ -15,5 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .schedule import Schedule
+from .schedule import SchoolDay
+from .schedule import Lesson
 from .tamo_users import User
 from .tamo_users import Teacher
