@@ -1,5 +1,4 @@
 import setuptools
-import tamo.static_tamo
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -20,12 +19,11 @@ setuptools.setup(
     ],
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/Sabrehvardas/libtamo",
+    url="https://github.com/Sabrehvardas/tamolib",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GPL License",
         "Operating System :: OS independent",
     ]
-    # python_requires='>=3.6', I don't know
 )

@@ -11,8 +11,17 @@ else
     exit 1
 fi
 
+# Yes, duplicate if statement, I really don't know bash
+FILE="./tests/secrets/schedule.json"
+if test -f "$FILE"; then
+    :
+else
+    echo "No credentials file found!"
+    exit 1
+fi
+
 rm -r ./tamo-venv
 python3 -m venv tamo-venv
 source tamo-venv/bin/activate
-pip3 install -r requirements.txt
+pip3 install -r ./requirements.txt
 python3 -m unittest tests.test
