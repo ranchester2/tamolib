@@ -14,47 +14,50 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import tamo
+import datetime
+import json
+
 import bs4
 from pathlib import Path
-import json
-import datetime
+
 from .tamo_users import Teacher
 
 
 class Lesson:
     """
-    A lesson of a day
+    A lesson of a day.
 
     Attributes:
-        :num_in_day: value of type `int` of which lesson in the day is it
-        :start: `datetime.datetime` object of when the lesson starts in the day
-        :end: `datetime.datetime` object of when the lesson ends in the day
+        :num_in_day: `int` of which lesson in the day is it/
+            NOTE: uses IRL naming scheme.
+        :start: `datetime.datetime` of when the lesson starts in the day
+        :end: `datetime.datetime` of when the lesson ends in the day
         :name: `str` of the full name of the lesson's subject.
-        :teacher: TAMO `Teacher` object of who teaches the subject.
+        :teacher: `tamo.models.Teacher` of who teaches the subject.
     """
 
     def __init__(
             self,
-            dnumber: int,
+            num_in_day: int,
             lesson_start: datetime.datetime,
             lesson_end: datetime.datetime,
             name: str,
             teacher: Teacher
     ):
         """
-        Create a lesson object
+        Create a lesson object.
 
         Parameters:
-            :dnumber: `int` of which lesson of the day it is.
-            :lesson_start: `datetime.datetime` object of
+            :num_in_day: `int` of which lesson of the day it is.
+                NOTE: uses IRL naming scheme.
+            :lesson_start: `datetime.datetime` of
             when the lesson starts in the day.
-            :lesson_end: `datetime.datetime` object of when
+            :lesson_end: `datetime.datetime` of when
             when the lesson ends in the day.
             :name: `str` of full name of the lesson's subject.
-            :teacher: TAMO `Teacher` object of who Teaches the subject.
+            :teacher: `tamo.models.Teacher` of who Teaches the subject.
         """
-        self.num_in_day = dnumber
+        self.num_in_day = num_in_day
         self.start = lesson_start
         self.end = lesson_end
         self.name = name
@@ -63,7 +66,7 @@ class Lesson:
 
 class SchoolDay:
     """
-    A school day, contains lessons
+    A school day, contains lessons.
 
     Attributes:
         :empty: whether the SchoolDay has no lessons.
@@ -76,9 +79,9 @@ class SchoolDay:
 
     def __init__(self, lessons=[], empty=False):
         """
-        Create a school day
+        Create a school day.
 
-        :lessons: can be a list of Lesson objects, if not given
+        :lessons: can be a list of `tamo.models.Lesson` objects, if not given
         you must add lessons after the fact with `SchoolDay.append_lesson`.
         :empty: whether the schoolday has no lessons.
         """
@@ -98,17 +101,19 @@ class SchoolDay:
 
     def append_lesson(self, lesson: Lesson):
         """
-        Add a lesson to the schoolday
+        Add a lesson to the schoolday.
 
-        :lesson: is a `tamo.models.Lesson` object,
-        
-        You do not need to worry about the order
-        as they will be sorted automatically if they
-        are valid Lesson objects
+        Arguments:
+            :lesson:`tamo.models.Lesson` of the lesson that you want to add.
+
+        NOTE:
+            You do not need to worry about the order
+            as they will be sorted automatically if they
+            are valid Lesson objects
         """
         self._lessons.append(lesson)
 
-        # We want the list to always be sorted by time
+        # We want the list to always be sorted
         self._lessons.sort(key=lambda x: x.num_in_day)
 
     def __getitem__(self, item) -> Lesson:
@@ -141,7 +146,6 @@ class Schedule:
         # on the Lithuanian full word
         with open(Path(__file__).parents[1] / "tamo-data" / "number-map.json", 'r') as f:
             self._number_map = json.load(f)
-            print(type(self._number_map))
 
     def _get_days(self):
         self._parse()
@@ -152,7 +156,8 @@ class Schedule:
     def _parse(self):
         self.__days = []
 
-        all_unparsed_days = self._sched_div.find_all("table", class_="c_main_table full_width padless borderless wrap_text")
+        all_unparsed_days = self._sched_div.find_all("table",
+                                                     class_="c_main_table full_width padless borderless wrap_text")
 
         for unparsed_day in all_unparsed_days:
             tmp_day = SchoolDay()
@@ -162,7 +167,7 @@ class Schedule:
             for unparsed_lesson in unparsed_lessons_of_day:
                 unparsed_lesson_children = unparsed_lesson.find_all(recursive=False)
 
-                # We need to check wether there aren't any lessons
+                # "Nera pamoku" means the day has no lessons
                 if "Nėra pamokų" in unparsed_lesson_children[0].get_text(strip=True):
                     tmp_day.empty = True
                     continue
@@ -170,12 +175,10 @@ class Schedule:
                 # Second element is the number of the unparsed_lesson in the day
                 tmp_lesson_number = self._number_map[unparsed_lesson_children[1].get_text(strip=True)]
 
-                # Third element is the length of the unparsed_lesson formated like this:
+                # Third element is the length of the unparsed_lesson formatted like this:
                 # %h%m - %h%m
-                tmp_unparsed_lesson_start = (
-                                                unparsed_lesson_children[2].get_text(strip=True))[:5]
-                tmp_unparsed_lesson_end = (
-                                              unparsed_lesson_children[2].get_text(strip=True))[-5:]
+                tmp_unparsed_lesson_start = (unparsed_lesson_children[2].get_text(strip=True))[:5]
+                tmp_unparsed_lesson_end = (unparsed_lesson_children[2].get_text(strip=True))[-5:]
 
                 tmp_lesson_start = datetime.datetime.strptime(
                     tmp_unparsed_lesson_start, "%H:%M")

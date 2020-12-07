@@ -14,13 +14,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import tamo
+import datetime
+import json
+import os
 import unittest
+
 from dotenv import load_dotenv
 from pathlib import Path
-import os
-import json
-import datetime
+
+import tamo
 
 
 class LoginTest(unittest.TestCase):

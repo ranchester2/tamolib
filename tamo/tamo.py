@@ -13,29 +13,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import os
-from pathlib import Path
-import json
 import requests
 from bs4 import BeautifulSoup, SoupStrainer
+
 from tamo.models import Schedule
 
 
 class Tamo():
     """
-    Interact with TAMO
+    Interact with TAMO.
 
     Class designed for creating a Tamo session
     and using it to communicate with the online
-    education platform
+    education platform.
 
     Attributes:
-        :logged_in: `bool` of wether you have successfully authenticated and are logged in.
+        :logged_in: `bool` of whether you have successfully authenticated and are logged in.
     """
 
     def __init__(self, username, password):
         """
-        Create a Tamo session
+        Create a Tamo session.
 
         :username: the username of your account.
         :password: the password of your account.
@@ -65,12 +63,11 @@ class Tamo():
             'SToken': SToken
         }
 
-        # This line is weird
         self._session.post("https://dienynas.tamo.lt/", data=payload)
 
     @property
     def logged_in(self) -> bool:
-        """Wether or not the session is logged in"""
+        """Whether or not the session is logged in."""
         if self._logged_in is None:
             return self._check_logged_in()
         return self._logged_in
@@ -89,9 +86,9 @@ class Tamo():
     @property
     def schedule(self) -> Schedule:
         """
-        Your account's lesson schedule
+        Your account's lesson schedule.
 
-        A TAMO `Schedule` object.
+        :type: `tamo.models.Schedule`
         """
         if self._schedule is None:
             return self._get_schedule()
@@ -100,9 +97,8 @@ class Tamo():
     def _get_schedule(self):
         r = self._session.post(
             "https://dienynas.tamo.lt/TvarkarascioIrasas/MokinioTvarkarastis")
-        only_schedule = SoupStrainer(id="c_main")
 
-        soup = BeautifulSoup(r.text, "lxml", parse_only=only_schedule)
+        soup = BeautifulSoup(r.text, "lxml")
 
         # c_main is the id that the schedule div uses
         schedule_div = soup.find("div", {"id": "c_main"})
