@@ -16,35 +16,35 @@
 
 class User:
     """
-    A base TAMO user, currently mostly useless
+    A base TAMO user, currently mostly useless.
 
     Attributes:
-        :name: full `str` name of the user
+        :name: full `str` name of the user.
     """
 
     def __init__(self, name: str):
         """
-        Create a TAMO user
+        Create a TAMO user.
 
-        Arguments:
-            :name: full `str` name of the user
+        Parameters:
+            :name: full `str` name of the user.
         """
         self.name = name
 
 
 class Teacher(User):
     """
-    A Teacher in TAMO, currently mostly useless
+    A Teacher in TAMO, currently mostly useless.
 
     Attributes:
-        :name: full `str` name of the teacher
+        :name: full `str` name of the teacher.
     """
 
     def __init__(self, name):
         """
-        Create a TAMO teacher
+        Create a TAMO teacher.
 
         Arguments:
-            :name: full `str` name of the teacher
+            :name: full `str` name of the teacher.
         """
         super().__init__(name)
