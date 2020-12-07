@@ -66,8 +66,11 @@ class SchoolDay:
     A school day, contains lessons
 
     Attributes:
-        :lessons: list of TAMO `Lesson` objects.
         :empty: whether the SchoolDay has no lessons.
+
+    Iterate:
+        Iterate through the lessons of the day, type `tamo.models.Lesson`,
+        does not exist if attribute :emtpy: is `True`
 
     """
 
@@ -76,7 +79,7 @@ class SchoolDay:
         Create a school day
 
         :lessons: can be a list of Lesson objects, if not given
-        you must add lessons after thefact with `SchoolDay.append_lesson`.
+        you must add lessons after the fact with `SchoolDay.append_lesson`.
         :empty: whether the schoolday has no lessons.
         """
 
@@ -97,7 +100,7 @@ class SchoolDay:
         """
         Add a lesson to the schoolday
 
-        :lesson: should be a TAMO `Lesson` object,
+        :lesson: is a `tamo.models.Lesson` object,
         
         You do not need to worry about the order
         as they will be sorted automatically if they
@@ -119,8 +122,9 @@ class Schedule:
     """
     A schedule object for TAMO.
 
-    Attributes:
-        :days: list of TAMO `SchoolDay` objects representing the Scheduled week.
+    Iterate:
+        Iterate through the lessons of the day, behaves like list.
+        All are `tamo.models.SchoolDay` objects.
     """
 
     def __init__(self, sched_div: bs4.element.Tag):
