@@ -61,17 +61,8 @@ Your account's schedule in TAMO, know what lessons happen when.
 
 ### **Iterate**.
 
-Iterate through the `days` property.
-
-### **Properties**
-
-### **`days`**
-
-A `list` of `tamo.models.SchoolDay`.
-
-##### **Type**
-
-`list`
+Iterate through the what days are in the schedule, behaves like a list.
+All elements of list are `tamo.models.SchoolDay`
 
 ## SchoolDay `class tamo.models.SchoolDay`
 
@@ -81,7 +72,8 @@ A School Day in TAMO.
 
 ### **Iterate**
 
-Will iterate through the `lessons` property
+Will iterate through the a list of `tamo.models.Lesson`, behaves like a list. This will not work
+if the property `emtpy` is `True`
 
 ### **Properties**
 
@@ -92,14 +84,6 @@ Wether the scool day is empty and has no lessons
 ##### **Type**
 
 `bool`
-
-### **`lessons`**
-
-List of `tamo.models.Lesson` in the day, does not exist if the property `emtpy` is `True`.
-
-##### **Type**
-
-`list`
 
 ### **Methods**
 

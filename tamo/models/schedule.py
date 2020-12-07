@@ -66,8 +66,11 @@ class SchoolDay:
     A school day, contains lessons
 
     Attributes:
-        :lessons: list of TAMO `Lesson` objects.
         :empty: whether the SchoolDay has no lessons.
+
+    Iterate:
+        Iterate through the lessons of the day, type `tamo.models.Lesson`,
+        does not exist if attribute :emtpy: is `True`
 
     """
 
@@ -76,20 +79,20 @@ class SchoolDay:
         Create a school day
 
         :lessons: can be a list of Lesson objects, if not given
-        you must add lessons after thefact with `SchoolDay.append_lesson`.
+        you must add lessons after the fact with `SchoolDay.append_lesson`.
         :empty: whether the schoolday has no lessons.
         """
 
         # We need to do this instead of simply assigning, because otherwise
         # every time we create such an object, it gets its previous values.
         # I don't know why is this
-        self.lessons = lessons[:]
+        self._lessons = lessons[:]
 
         self.empty = empty
 
         # If the passed list is empty an error here is expected
         try:
-            self.lessons.sort(key=lambda x: x.num_in_day)
+            self._lessons.sort(key=lambda x: x.num_in_day)
         except:
             pass
 
@@ -97,27 +100,31 @@ class SchoolDay:
         """
         Add a lesson to the schoolday
 
-        :lesson: should be a TAMO `Lesson` object,
+        :lesson: is a `tamo.models.Lesson` object,
         
         You do not need to worry about the order
         as they will be sorted automatically if they
         are valid Lesson objects
         """
-        self.lessons.append(lesson)
+        self._lessons.append(lesson)
 
         # We want the list to always be sorted by time
-        self.lessons.sort(key=lambda x: x.num_in_day)
+        self._lessons.sort(key=lambda x: x.num_in_day)
 
     def __getitem__(self, item) -> Lesson:
-        return self.lessons[item]
+        return self._lessons[item]
+
+    def __len__(self):
+        return len(self._lessons)
 
 
 class Schedule:
     """
     A schedule object for TAMO.
 
-    Attributes:
-        :days: list of TAMO `SchoolDay` objects representing the Scheduled week.
+    Iterate:
+        Iterate through the lessons of the day, behaves like list.
+        All are `tamo.models.SchoolDay` objects.
     """
 
     def __init__(self, sched_div: bs4.element.Tag):
@@ -128,7 +135,7 @@ class Schedule:
         containing all schedule content.
         """
         self._sched_div = sched_div
-        self._days = None
+        self.__days = None
 
         # The number map let's us find out the number based
         # on the Lithuanian full word
@@ -138,10 +145,12 @@ class Schedule:
 
     def _get_days(self):
         self._parse()
-        return self._days
+        return self.__days
 
+    # This could probably be integrated directly
+    # into _get_days() instead.
     def _parse(self):
-        self._days = []
+        self.__days = []
 
         all_unparsed_days = self._sched_div.find_all("table", class_="c_main_table full_width padless borderless wrap_text")
 
@@ -173,7 +182,7 @@ class Schedule:
                 tmp_lesson_end = datetime.datetime.strptime(
                     tmp_unparsed_lesson_end, "%H:%M")
 
-                # Fourth element is the full name of theunparsed_lesson
+                # Fourth element is the full name of the unparsed_lesson
                 tmp_lesson_name = unparsed_lesson_children[3].get_text(strip=True)
 
                 # Fifth element is the full name of the Teacher
@@ -191,18 +200,29 @@ class Schedule:
                     )
                 )
 
-            self._days.append(tmp_day)
+            self.__days.append(tmp_day)
 
+    # Private because we don't need that as we
+    # use special methods instead, however we still
+    # want this as a dynamically loaded property
+    # for caching and performance.
     @property
-    def days(self) -> list:
+    def _days(self) -> list:
         """
         List of days of the schedule
 
         :return: a list of SchoolDay objects
         """
-        if self._days is None:
+
+        # Double underscore seams weird, however I don't know
+        # how to handle this any better, since we want to use a cached
+        # property, however _days is already the name of the property
+        if self.__days is None:
             return self._get_days()
-        return self._days
+        return self.__days
+
+    def __len__(self):
+        return len(self._days)
 
     def __getitem__(self, item):
-        return self.days[item]
+        return self._days[item]
