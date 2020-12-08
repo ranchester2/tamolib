@@ -77,7 +77,7 @@ class SchoolDay:
 
     """
 
-    def __init__(self, lessons=[], empty=False):
+    def __init__(self, lessons=None, empty=False):
         """
         Create a school day.
 
@@ -88,8 +88,18 @@ class SchoolDay:
 
         # We need to do this instead of simply assigning, because otherwise
         # every time we create such an object, it gets its previous values.
-        # I don't know why is this
-        self._lessons = lessons[:]
+        # ~~I don't know why is this~~
+
+        # Update: the reason is https://www.reddit.com/r/learnpython/comments/apsplq/what_are_some_bad_habits_to_avoid/egbgqnf/
+        # (last point). This was soooo frustrating for me. See commit
+        # history for what was the issue before
+        if lessons is None:
+            self._lessons = []
+        else:
+        # I don't know if I actually need this line, and according to
+        # the above linked reddit comment its not super clear,
+        # however I will still leave it in.
+            self._lessons = lessons[:]
 
         self.empty = empty
 
