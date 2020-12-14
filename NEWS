@@ -1,0 +1,6 @@
+0.0.2:
+
+Not much change, some cleanup and iteration changed, no more .days
+attributes. Current api docs are quite unmaintainably due to duplication
+with docstrings. I think theres sphinx that generates docs from
+docstrings, but I want the other way round...

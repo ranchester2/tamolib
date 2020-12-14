@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="tamo",
-    version='0.0.1',
+    version='0.0.2',
     author="Sabreh Vardas",
     author_email="savrehvardas@gmail.com",
     description="A package for interacting with TAMO",
