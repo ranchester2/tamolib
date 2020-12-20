@@ -1,0 +1,20 @@
+TAMO Overview (I think).
+
+After logging in, you just have a cookie or something similar, which
+means you can fetch dienynas pages without getting redirected to the log
+in screen.
+
+Unfotunately, the vast majority are just places were you fetch the page,
+and the server generates it with all your info. There doesn't really
+seam to be an API.
+
+However, very recently they introduced a new messages system, and this
+does use an "api.tamo.lt" server. Which sounds like a very good thing.
+
+However not all the pages are static like that, the schedule page is.
+However the analytics page seams to use jquerry.
+
+Also, because they put in a lot of syntax errors, the minification of
+their main code file that gets sent to you failed! So I got it, and even
+with comments (the comments are quite useless and awful though, code
+also seams quite bad)
