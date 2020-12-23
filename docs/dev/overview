@@ -18,3 +18,27 @@ Also, because they put in a lot of syntax errors, the minification of
 their main code file that gets sent to you failed! So I got it, and even
 with comments (the comments are quite useless and awful though, code
 also seams quite bad)
+
+
+--Official Mobile App--
+
+They also have an official mobile app, and this app has a lot of the
+features of the website. And I __highly__ doubt that they are web
+scraping their own website.
+
+However, unfortunately I can't figure out how the hell to analyze that.
+
+So, apparently you could use "tcpdump", so I installed tamo on my other
+rooted phone, (on which for some reason TAMO almost immediatrly crashes
+after signing in), and used tcpdump. And then I tried to open it with
+wireshark.
+
+HOWEVER THAT SEAMS ABSOLUTELY USELESS, I can see some IPs, but I can't
+figure out how to find out what is in the data that for some reason
+looks like completely random guarbage.
+
+I also tried to decompile that, with a bunch of apk extractors, then an
+apk to .jar converter, then a decompiler (and the search results about
+decompiling for some reason are extremely full of crap), however that
+didn't give me any useful results.
+
