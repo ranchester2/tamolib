@@ -6,8 +6,8 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="tamo",
     version='0.0.2',
-    author="Sabreh Vardas",
-    author_email="savrehvardas@gmail.com",
+    author="Raidro Manchester ",
+    author_email="raibo.quadrofus@gmail.com",
     description="A package for interacting with TAMO",
     include_package_data=True,
     install_requires=[
@@ -19,7 +19,7 @@ setuptools.setup(
     ],
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/Sabrehvardas/tamolib",
+    url="https://github.com/ranchester2/tamolib",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
