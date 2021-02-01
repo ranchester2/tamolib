@@ -57,6 +57,7 @@ class ScheduleTest(unittest.TestCase):
         self.t.close()
 
     def test_schedule(self):
+        self.assertNotEqual(len(self.t.schedule), 0)
         for didx, day in enumerate(self.t.schedule):
             # We only test the first 3 days and the last because I can't be bothered to write
             # the schedule.json for the rest of them.
