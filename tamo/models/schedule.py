@@ -215,6 +215,10 @@ class Schedule:
 
             self.__days.append(tmp_day)
 
+        # When it breaks, it is usually length of zero, and this really should
+        # be an Exception
+        assert len(self.__days) != 0
+
     # Private because we don't need that as we
     # use special methods instead, however we still
     # want this as a dynamically loaded property
